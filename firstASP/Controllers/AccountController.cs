@@ -25,15 +25,7 @@ public class AccountController : Controller
     {
         if (User.Identity != null && User.Identity.IsAuthenticated)
         {
-            if (User.IsInRole("Admin"))
-            {
-                return RedirectToAction("Index", "Admin");
-            }
-
-            if (User.IsInRole("Student"))
-            {
-                return RedirectToAction("Index", "StudentProfile");
-            }
+            return RedirectToAction("Index", "Home");
         }
 
         return View();
@@ -71,20 +63,18 @@ public class AccountController : Controller
 
             if (user != null)
             {
-                // ADMIN ACCOUNT
-                if (await _userManager.IsInRoleAsync(user, "Admin"))
-                {
-                    return RedirectToAction("Index", "Admin");
-                }
+                bool isAdmin =
+                    await _userManager.IsInRoleAsync(user, "Admin");
 
-                // STUDENT ACCOUNT
-                if (await _userManager.IsInRoleAsync(user, "Student"))
+                bool isStudent =
+                    await _userManager.IsInRoleAsync(user, "Student");
+
+                if (isAdmin || isStudent)
                 {
-                    return RedirectToAction("Index", "StudentProfile");
+                    return RedirectToAction("Index", "Home");
                 }
             }
 
-            // ACCOUNT HAS NO VALID ROLE
             await _signInManager.SignOutAsync();
 
             ModelState.AddModelError(
@@ -176,7 +166,6 @@ public class AccountController : Controller
 
         if (result.Succeeded)
         {
-            // NEW REGISTRATIONS ARE ALWAYS STUDENTS
             var roleResult =
                 await _userManager.AddToRoleAsync(user, "Student");
 

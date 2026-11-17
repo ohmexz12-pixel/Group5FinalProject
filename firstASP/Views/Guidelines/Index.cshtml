@@ -1,0 +1,106 @@
+
+@{
+    ViewData["Title"] = "Court Rules & Guidelines";
+}
+
+<section class="page-header">
+    <div class="container">
+        <p class="small-label">BRS / GUIDELINES</p>
+        <h1>Court Rules & Guidelines.</h1>
+        <p>Please read and follow these guidelines before using the basketball court.</p>
+    </div>
+</section>
+
+<section class="container py-5">
+
+    <div class="text-center mb-5">
+        <i class="bi bi-basketball display-3"></i>
+        <h2 class="fw-bold mt-3">Play Fair. Stay Safe. Respect the Court.</h2>
+        <p class="text-muted">
+            Help us maintain a safe, clean, and enjoyable environment for everyone.
+        </p>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6">
+            <div class="card h-100 border shadow-sm p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-calendar-check fs-2 me-3"></i>
+                    <h4 class="fw-bold mb-0">Reservations</h4>
+                </div>
+                <ol class="mb-0">
+                    <li class="mb-2">Only registered students may submit reservations.</li>
+                    <li class="mb-2">Submit your reservation in advance.</li>
+                    <li class="mb-2">Wait for admin approval before using the court.</li>
+                    <li class="mb-2">Follow your approved reservation date and time.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 border shadow-sm p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-person-check fs-2 me-3"></i>
+                    <h4 class="fw-bold mb-0">Proper Conduct</h4>
+                </div>
+                <ol class="mb-0">
+                    <li class="mb-2">Treat other players, students, and staff with respect.</li>
+                    <li class="mb-2">Avoid fighting, bullying, and inappropriate behavior.</li>
+                    <li class="mb-2">Follow instructions given by authorized school personnel.</li>
+                    <li class="mb-2">Practice good sportsmanship at all times.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 border shadow-sm p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-shield-check fs-2 me-3"></i>
+                    <h4 class="fw-bold mb-0">Safety</h4>
+                </div>
+                <ol class="mb-0">
+                    <li class="mb-2">Wear proper sports attire and appropriate basketball shoes.</li>
+                    <li class="mb-2">Warm up before playing to help prevent injuries.</li>
+                    <li class="mb-2">Do not use damaged or unsafe equipment.</li>
+                    <li class="mb-2">Report accidents, injuries, or unsafe conditions immediately.</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card h-100 border shadow-sm p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="bi bi-trash3 fs-2 me-3"></i>
+                    <h4 class="fw-bold mb-0">Court Maintenance</h4>
+                </div>
+                <ol class="mb-0">
+                    <li class="mb-2">Keep the basketball court clean and organized.</li>
+                    <li class="mb-2">Dispose of trash in the proper bins.</li>
+                    <li class="mb-2">Take care of court equipment and facilities.</li>
+                    <li class="mb-2">Return borrowed equipment after use.</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="border p-4 mt-5 text-center">
+        <i class="bi bi-exclamation-circle fs-2"></i>
+        <h4 class="fw-bold mt-2">Important Reminder</h4>
+        <p class="text-muted mb-0">
+            Failure to follow these guidelines may result in reservation
+            cancellation or other action by the authorized administrator,
+            subject to applicable school policies.
+        </p>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-controller="Reservations"
+           asp-action="Create"
+           class="btn btn-dark btn-lg px-4">
+            <i class="bi bi-calendar-plus"></i> Reserve a Court
+        </a>
+    </div>
+
+</section>

@@ -1,84 +1,146 @@
 
+@model List<firstASP.Models.Reservation>
+
 @{
-    ViewData["Title"] = "Courts";
+    ViewData["Title"] = "Court Schedule";
+
+    DateTime weekStart = (DateTime)ViewBag.WeekStart;
+    DateTime previousWeek = (DateTime)ViewBag.PreviousWeek;
+    DateTime nextWeek = (DateTime)ViewBag.NextWeek;
+
+    string[] dayNames =
+    {
+        "Monday", "Tuesday", "Wednesday",
+        "Thursday", "Friday", "Saturday", "Sunday"
+    };
+
+    int[] hours = Enumerable.Range(7, 14).ToArray();
 }
 
 <section class="page-header">
     <div class="container">
-        <p class="small-label">BRS / COURTS</p>
-        <h1>Find Your Court.</h1>
-        <p>Explore our basketball courts and choose where you want to play.</p>
+        <p class="small-label">BRS / SCHEDULE</p>
+        <h1>Court Schedule.</h1>
+        <p>Check the availability of the school basketball court.</p>
     </div>
 </section>
 
 <section class="container py-5">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-3 mb-4">
         <div>
-            <h2 class="fw-bold">Our Courts</h2>
-            <p class="text-muted">Choose a court for your next game.</p>
+            <h2 class="fw-bold mb-1">Weekly Calendar</h2>
+            <p class="text-muted mb-0">
+                @weekStart.ToString("MMMM dd") -
+                @weekStart.AddDays(6).ToString("MMMM dd, yyyy")
+            </p>
         </div>
-        <span class="badge bg-dark p-2">3 Courts</span>
+
+        <div class="d-flex gap-2">
+            <a asp-controller="Courts"
+               asp-action="Index"
+               asp-route-weekStart="@previousWeek.ToString("yyyy-MM-dd")"
+               class="btn btn-outline-dark">
+                Previous
+            </a>
+
+            <a asp-controller="Courts"
+               asp-action="Index"
+               class="btn btn-dark">
+                This Week
+            </a>
+
+            <a asp-controller="Courts"
+               asp-action="Index"
+               asp-route-weekStart="@nextWeek.ToString("yyyy-MM-dd")"
+               class="btn btn-outline-dark">
+                Next
+            </a>
+        </div>
     </div>
 
-    <div class="row g-4">
-
-        <div class="col-lg-4 col-md-6">
-            <div class="court-card">
-                <div class="court-picture picture-one">
-                    <i class="bi bi-basketball"></i>
-                    <span>COURT 01</span>
-                </div>
-                <div class="p-4">
-                    <h4>Indoor Court</h4>
-                    <p class="text-muted">
-                        <i class="bi bi-geo-alt"></i> Main Sports Center
-                    </p>
-                    <hr />
-                    <p><i class="bi bi-house"></i> Indoor</p>
-                    <p><i class="bi bi-people"></i> Full Basketball Court</p>
-                    <a href="#" class="btn btn-dark w-100 mt-2">Reserve Court</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-            <div class="court-card">
-                <div class="court-picture picture-two">
-                    <i class="bi bi-basketball"></i>
-                    <span>COURT 02</span>
-                </div>
-                <div class="p-4">
-                    <h4>Outdoor Court</h4>
-                    <p class="text-muted">
-                        <i class="bi bi-geo-alt"></i> Community Sports Area
-                    </p>
-                    <hr />
-                    <p><i class="bi bi-sun"></i> Outdoor</p>
-                    <p><i class="bi bi-people"></i> Full Basketball Court</p>
-                    <a href="#" class="btn btn-dark w-100 mt-2">Reserve Court</a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-4 col-md-6">
-            <div class="court-card">
-                <div class="court-picture picture-three">
-                    <i class="bi bi-basketball"></i>
-                    <span>COURT 03</span>
-                </div>
-                <div class="p-4">
-                    <h4>Training Court</h4>
-                    <p class="text-muted">
-                        <i class="bi bi-geo-alt"></i> Training Facility
-                    </p>
-                    <hr />
-                    <p><i class="bi bi-house"></i> Indoor</p>
-                    <p><i class="bi bi-people"></i> Half Basketball Court</p>
-                    <a href="#" class="btn btn-dark w-100 mt-2">Reserve Court</a>
-                </div>
-            </div>
-        </div>
-
+    <div class="d-flex flex-wrap gap-3 mb-4">
+        <span><span class="badge bg-success">&nbsp;</span> Available</span>
+        <span><span class="badge bg-danger">&nbsp;</span> Reserved</span>
     </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+
+            <h4 class="fw-bold mb-1">School Basketball Court</h4>
+            <p class="text-muted mb-4">Weekly reservation schedule</p>
+
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Time</th>
+
+                            @for (int day = 0; day < 7; day++)
+                            {
+                                <th>
+                                    @dayNames[day]
+                                    <br />
+                                    <small>
+                                        @weekStart.AddDays(day).ToString("MMM dd")
+                                    </small>
+                                </th>
+                            }
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (int hour in hours)
+                        {
+                            <tr>
+                                <th class="table-light">
+                                    @DateTime.Today.Date.AddHours(hour).ToString("hh:mm tt")
+                                </th>
+
+                                @for (int day = 0; day < 7; day++)
+                                {
+                                    var slotStart = weekStart.AddDays(day).AddHours(hour);
+                                    var slotEnd = slotStart.AddHours(1);
+
+                                    var reservation = Model.FirstOrDefault(r =>
+                                        r.StartDateTime < slotEnd &&
+                                        r.EndDateTime > slotStart);
+
+                                    <td>
+                                        @if (reservation != null)
+                                        {
+                                            <div class="bg-danger text-white rounded p-2">
+                                                <strong>Reserved</strong>
+                                                <br />
+                                                <small>
+                                                    @reservation.StartDateTime.ToString("hh:mm tt")
+                                                    -
+                                                    @reservation.EndDateTime.ToString("hh:mm tt")
+                                                </small>
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success w-100 p-2">
+                                                Available
+                                            </span>
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+
+            <p class="small text-muted mb-0">
+                Each calendar slot represents one hour. Only approved
+                reservations appear as reserved.
+            </p>
+
+        </div>
+    </div>
+
 </section>
